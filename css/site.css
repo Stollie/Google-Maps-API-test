@@ -9,4 +9,5 @@
 root { 
     display: block;
 }
-
+#container { margin: 0 auto; }
+#map-canvas { height: 500px;  }
