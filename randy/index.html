@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>Google Maps API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style>
+
+		body {
+			padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		}
+		#map { 
+			width: 100%; 
+			height: 500px; 
+		}
+	    
+	</style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <!--<span class="icon-bar"></span>
+            <span class="icon-bar"></span>-->
+          </button>
+          <a class="brand" href="index.php">Google Maps API</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="index.php">Home</a></li>
+              <!--<li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>-->
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+		<h1>Google Maps API</h1>
+		<p>Status: <span id="status">Voer een doel locatie in om te beginnen.</span></p>
+	
+		<input id="target" type="text" placeholder="Vul adres in">
+	
+		<div class="map" id="map"></div>
+	
+   </div> <!-- /container -->
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry"></script>
+
+    <script src="js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+	
+		$('#target').focusout(function() {
+		
+			// Als er iets is ingevuld
+			if( $(this).val() != '') {
+			
+				$('#status').html("Doel locatie opzoeken..");
+
+	            // Zoek de doel locatie op
+	            $.getJSON("http://maps.googleapis.com/maps/api/geocode/json",{ 
+	            	"sensor": false, 
+	            	"address": $(this).val()
+	            
+	            // Als het is gelukt
+	            }).done(function(data){
+	            
+		            // Sla de doel locatie op in een LatLng object
+					latlonTarget = new google.maps.LatLng(data.results[0].geometry.location.lat, data.results[0].geometry.location.lng);
+					//latlonTarget = new google.maps.LatLng(51.856984,4.449699); // De Buytenhof
+	                
+
+
+	                
+	                
+	                
+	                
+		                
+					// Als de browser geolocations ondersteund
+					if (navigator.geolocation) {
+	
+						// Vraag de huidige locatie op
+						navigator.geolocation.getCurrentPosition(function(position) {
+					
+					
+					
+					
+					
+					
+					
+					
+							// Sla de huidige en de target locatie op
+							latlonCurrent 	= new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+	
+							
+							// Bereken de afstand tussen huidige en de target locatie
+							distance = google.maps.geometry.spherical.computeDistanceBetween(latlonCurrent, latlonTarget);
+	
+	
+	
+	
+							// Teken een map in #map 
+							var map = new google.maps.Map(document.getElementById('map'));
+						
+								// Stel het type van de map in
+								map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+								
+								// Centreer de map op de target locatie
+								map.setCenter(latlonTarget);
+								
+								// Zoom naar het juiste niveau
+								map.setZoom(11);
+					
+	
+	
+	
+	
+							
+					
+							
+							
+							
+							// Plaats de current marker
+							markerTarget = new google.maps.Marker({
+								position: latlonCurrent,
+								map: map
+							});
+							
+							
+							
+							// Plaats de target marker
+							markerTarget = new google.maps.Marker({
+								position: latlonTarget,
+								map: map
+							});
+							
+							
+							
+							
+							// Plaas een circle rondom de target, de distance
+							circle = new google.maps.Circle({
+								center			: latlonTarget,
+								map				: map,
+								radius			: distance,
+								fillOpacity		: 0.1,
+								strokeOpacity	: 0.2
+							});
+							
+							// Toon de afstand
+							$('#status').html('De afstand tussen uw huidige locatie en uw doel locatie is: '+Math.round(distance)+' meter.');
+					
+						// Als de huidige locatie niet opgevraagd kon worden
+						}, function() {
+							$('#status').html('De huidige locatie kon niet worden opgevraagd.');
+						});
+					
+					// Als de browser geolocations niet ondersteund
+					} else {
+						$('#status').html("Uw huidige locatie kan niet worden opgevraagd.");
+					}
+					
+				
+				
+				
+					            
+	            // Als de doel locatie niet kon worden gevonden
+	            }).fail(function() {
+	                $('#status').html("Uw doel locatie kon niet worden gevonden.");
+	            });
+        
+        	// Als er niets is ingevuld
+			} else {
+				$('#status').html("Vul een doel locatie in om te beginnen.");
+			}
+		
+		});
+	
+	
+	
+
+
+		
+	
+	
+	</script>	
+	
+</body>
+</html>
