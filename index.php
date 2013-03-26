@@ -27,6 +27,9 @@
       src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js">
     </script>
     <script type="text/javascript"
+      src="js/markerclusterer.js">
+    </script>       
+    <script type="text/javascript"
       src="js/site.js">
     </script>   
   </body>
