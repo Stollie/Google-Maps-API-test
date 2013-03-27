@@ -19,6 +19,11 @@
 			width: 100%; 
 			height: 500px; 
 		}
+		#map-static {
+			float: right;
+			margin-top: 10px;
+			margin-left: 20px;
+		}
 	    
 	</style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
@@ -34,10 +39,10 @@
             <!--<span class="icon-bar"></span>
             <span class="icon-bar"></span>-->
           </button>
-          <a class="brand" href="index.php">Google Maps API</a>
+          <a class="brand" href="index.html">Google Maps API</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="index.php">Home</a></li>
+              <li class="active"><a href="index.html">Home</a></li>
               <!--<li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>-->
             </ul>
@@ -48,12 +53,21 @@
 
     <div class="container">
 
+		<!-- [1] Statische Google Maps afbeelding -->
+		<img id="map-static" src="http://maps.googleapis.com/maps/api/staticmap?
+			center=Coolsingel,Rotterdam,Nederland&amp;
+			zoom=10&amp;
+			size=500x100&amp;
+			maptype=roadmap&amp;
+			markers=Coolsingel,Rotterdam,Nederland&amp;
+			sensor=false" width="500" height="100">
+
 		<h1>Google Maps API</h1>
 		<p>Status: <span id="status">Voer een doel locatie in om te beginnen.</span></p>
 	
 		<input id="target" type="text" placeholder="Vul adres in">
-	
-		<div class="map" id="map"></div>
+		
+		<div id="map"></div>
 	
    </div> <!-- /container -->
 
@@ -76,7 +90,7 @@
 			
 				$('#status').html("Doel locatie opzoeken..");
 
-	            // Zoek de doel locatie op
+	            // [3] Zoek de doel locatie op: Coolsingel, Rotterdam, Nederland
 	            $.getJSON("http://maps.googleapis.com/maps/api/geocode/json",{ 
 	            	"sensor": false, 
 	            	"address": $(this).val()
@@ -84,41 +98,22 @@
 	            // Als het is gelukt
 	            }).done(function(data){
 	            
-		            // Sla de doel locatie op in een LatLng object
+		            // [a] Sla de doel locatie op in een LatLng object
 					latlonTarget = new google.maps.LatLng(data.results[0].geometry.location.lat, data.results[0].geometry.location.lng);
-					//latlonTarget = new google.maps.LatLng(51.856984,4.449699); // De Buytenhof
-	                
 
-
-	                
-	                
-	                
-	                
-		                
 					// Als de browser geolocations ondersteund
 					if (navigator.geolocation) {
 	
-						// Vraag de huidige locatie op
+						// [5] Vraag de huidige locatie op
 						navigator.geolocation.getCurrentPosition(function(position) {
 					
-					
-					
-					
-					
-					
-					
-					
-							// Sla de huidige en de target locatie op
+							// [b] Sla de huidige locatie op in een LatLng object
 							latlonCurrent 	= new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 	
-							
-							// Bereken de afstand tussen huidige en de target locatie
+							// [6] Bereken de afstand tussen huidige en de target locatie
 							distance = google.maps.geometry.spherical.computeDistanceBetween(latlonCurrent, latlonTarget);
 	
-	
-	
-	
-							// Teken een map in #map 
+							// [2] Teken een map in #map 
 							var map = new google.maps.Map(document.getElementById('map'));
 						
 								// Stel het type van de map in
@@ -130,33 +125,19 @@
 								// Zoom naar het juiste niveau
 								map.setZoom(11);
 					
-	
-	
-	
-	
-							
-					
-							
-							
-							
-							// Plaats de current marker
+							// [4] Plaats de current marker
 							markerTarget = new google.maps.Marker({
 								position: latlonCurrent,
 								map: map
 							});
 							
-							
-							
-							// Plaats de target marker
+							// [4] Plaats de target marker
 							markerTarget = new google.maps.Marker({
 								position: latlonTarget,
 								map: map
 							});
 							
-							
-							
-							
-							// Plaas een circle rondom de target, de distance
+							// [7] Plaas een circle rondom de target, de distance
 							circle = new google.maps.Circle({
 								center			: latlonTarget,
 								map				: map,
@@ -177,10 +158,6 @@
 					} else {
 						$('#status').html("Uw huidige locatie kan niet worden opgevraagd.");
 					}
-					
-				
-				
-				
 					            
 	            // Als de doel locatie niet kon worden gevonden
 	            }).fail(function() {
@@ -193,13 +170,6 @@
 			}
 		
 		});
-	
-	
-	
-
-
-		
-	
 	
 	</script>	
 	
